@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI创想家 - 儿童AI创作教育平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 首页: 产品展示页面 ========== -->
+<div class="page product-showcase-page" id="productShowcasePage">
+    <div class="showcase-container">
+        <!-- 产品名称 -->
+        <div class="product-title-wrapper">
+            <h1 class="product-title">AI 创想家</h1>
+            <p class="product-subtitle">让每个孩子都成为创意大师</p>
+        </div>
+
+        <!-- 立即进入按钮 -->
+        <div class="enter-button-wrapper">
+            <button class="btn btn-enter" onclick="location.href='login.html'">
+                <span class="enter-icon">🚀</span>
+                <span class="enter-text">立即进入</span>
+            </button>
+        </div>
+
+        <!-- 四张展示图片 -->
+        <div class="showcase-images">
+            <div class="showcase-image-item">
+                <img src="images/2.png" alt="产品展示图1" class="showcase-img">
+            </div>
+            <div class="showcase-image-item">
+                <img src="images/3.jpg" alt="产品展示图2" class="showcase-img">
+            </div>
+            <div class="showcase-image-item">
+                <img src="images/4.jpg" alt="产品展示图3" class="showcase-img">
+            </div>
+            <div class="showcase-image-item">
+                <img src="images/5.png" alt="产品展示图4" class="showcase-img">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部栏 -->
+<footer class="bottom-bar">
+    <a href="index.html">首页</a>
+    <span>|</span>
+    <a href="profile.html">个人中心</a>
+    <span>|</span>
+    <a href="#">隐私政策</a>
+    <span>|</span>
+    <a href="#">用户协议</a>
+    <span>|</span>
+    <a href="#">联系客服</a>
+    <span>|</span>
+    <a href="about.html">关于我们</a>
+</footer>
+
+</body>
+</html>
