@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理订阅 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 页面顶部导航 */
+        .page-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .nav-tab {
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-soft) 100%);
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        /* 主体内容 */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-soft) 100%);
+            border-radius: var(--radius-lg);
+            font-size: 1.75rem;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* 定价卡片 */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            position: relative;
+            transition: all 0.4s;
+            border: 2px solid transparent;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .pricing-card.free {
+            background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .pricing-card.vip {
+            background: linear-gradient(145deg, #fef7ff 0%, #ffffff 100%);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .pricing-card.vip:hover {
+            transform: scale(1.02) translateY(-8px);
+        }
+
+        .vip-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 0.5rem 1.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed var(--border);
+        }
+
+        .pricing-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .price-value {
+            font-size: 3.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+        }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feature-row:last-child {
+            border-bottom: none;
+        }
+
+        .feature-emoji {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+            width: 28px;
+            text-align: center;
+        }
+
+        .feature-name {
+            flex: 1;
+            font-size: 0.95rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .feature-limit {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            background: var(--bg);
+            padding: 0.25rem 0.625rem;
+            border-radius: var(--radius-full);
+        }
+
+        .feature-checkmark {
+            color: var(--success);
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .payment-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .payment-option {
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            transform: translateY(-2px);
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* 支付模态框 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .payment-qr {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            margin: 1.5rem auto;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .payment-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 1rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .page-nav {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .nav-tabs {
+                order: 100;
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+            }
+
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.vip {
+                transform: none;
+            }
+
+            .pricing-card.vip:hover {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 管理订阅页面 ========== -->
+<div class="page workspace-page">
+    <!-- 顶部导航 -->
+    <header class="page-nav">
+        <a href="profile.html" class="back-btn">
+            <span class="back-arrow">←</span> 返回
+        </a>
+        <h1 class="page-title">管理订阅</h1>
+        <nav class="nav-tabs">
+            <a href="profile-basic.html" class="nav-tab">👤 资料</a>
+            <a href="profile-parent.html" class="nav-tab">🔐 家长</a>
+            <a href="profile-feedback.html" class="nav-tab">💬 反馈</a>
+        </nav>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="main-content">
+        <div class="page-card">
+            <div class="card-header">
+                <div class="card-icon">💎</div>
+                <div>
+                    <h2 class="card-title">选择你的计划</h2>
+                    <p class="card-subtitle">解锁全部功能，开启创作之旅</p>
+                </div>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- 免费版 -->
+                <div class="pricing-card free">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">免费版</h3>
+                        <div class="pricing-price">
+                            <span class="price-value">¥0</span>
+                            <span class="price-period">/ 永久</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li class="feature-row">
+                            <span class="feature-emoji">📝</span>
+                            <span class="feature-name">写故事</span>
+                            <span class="feature-limit">10 次</span>
+                        </li>
+                        <li class="feature-row">
+                            <span class="feature-emoji">📚</span>
+                            <span class="feature-name">创绘本</span>
+                            <span class="feature-limit">10 次</span>
+                        </li>
+                        <li class="feature-row">
+                            <span class="feature-emoji">🎭</span>
+                            <span class="feature-name">立角色</span>
+                            <span class="feature-limit">10 次</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 会员版 -->
+                <div class="pricing-card vip">
+                    <div class="vip-badge">✨ 推荐</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">会员版</h3>
+                        <div class="pricing-price">
+                            <span class="price-value">¥39</span>
+                            <span class="price-period">/ 月</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li class="feature-row">
+                            <span class="feature-emoji">✨</span>
+                            <span class="feature-name">所有功能均解锁</span>
+                            <span class="feature-checkmark">✓</span>
+                        </li>
+                        <li class="feature-row">
+                            <span class="feature-emoji">📊</span>
+                            <span class="feature-name">每周更新成长报告</span>
+                            <span class="feature-checkmark">✓</span>
+                        </li>
+                        <li class="feature-row">
+                            <span class="feature-emoji">🎯</span>
+                            <span class="feature-name">智能推荐赛事与活动</span>
+                            <span class="feature-checkmark">✓</span>
+                        </li>
+                        <li class="feature-row">
+                            <span class="feature-emoji">💡</span>
+                            <span class="feature-name">作品创作建议</span>
+                            <span class="feature-checkmark">✓</span>
+                        </li>
+                    </ul>
+                    <div class="payment-section">
+                        <p class="payment-label">选择支付方式</p>
+                        <div class="payment-grid">
+                            <button class="payment-option" onclick="showPaymentModal('wechat')">
+                                💬 微信支付
+                            </button>
+                            <button class="payment-option" onclick="showPaymentModal('alipay')">
+                                💰 支付宝
+                            </button>
+                        </div>
+                    </div>
+                    <button class="upgrade-btn" onclick="showPaymentModal()">🚀 立即开通会员</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 支付模态框 -->
+<div class="modal" id="paymentModal">
+    <div class="modal-overlay" onclick="closePaymentModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>💎 开通会员</h2>
+            <button class="modal-close" onclick="closePaymentModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="paymentContent"></div>
+        </div>
+<script src="js/main.js"></script>
+    </div>
+</div>
+
+</body>
+</html>
