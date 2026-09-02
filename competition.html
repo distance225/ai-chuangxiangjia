@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热门赛事 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 热门赛事页面 ========== -->
+<div class="page workspace-page" id="competitionPage">
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <a href="index.html" class="top-logo">
+                <div class="top-logo-icon">🎨</div>
+                <span class="top-logo-text">AI 创想家</span>
+            </a>
+        </div>
+        
+        <div class="top-bar-center">
+            <a href="javascript:void(0)" class="nav-link-item active" onclick="location.href='competition.html'">🏆 热门赛事</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='activity.html'">🎪 主题活动</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='growth.html'">📊 作品与成长</a>
+        </div>
+        
+        <div class="top-bar-right">
+            <button class="icon-btn" title="消息通知">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+            <button class="tutorial-btn" title="新手教程" onclick="location.href='onboarding.html'">
+                <span class="btn-text">新手教程</span>
+            </button>
+            <div class="user-avatar-btn" onclick="location.href='profile.html'" title="个人中心">
+                <div class="user-avatar-small">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="workspace-main">
+        <!-- 左侧功能栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='workspace.html'">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">创作中心</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='story.html'">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">故事创作</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='picturebook.html'">
+                    <span class="nav-item-icon">📚</span>
+                    <span class="nav-item-text">绘本生成</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='character.html'">
+                    <span class="nav-item-icon">🎭</span>
+                    <span class="nav-item-text">角色工坊</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <div class="content-area">
+            <!-- 热门赛事 -->
+            <section class="competition-page" id="competitionSection">
+                <div class="page-header">
+                    <h1 class="page-title">🏆 热门赛事</h1>
+                    <p class="page-subtitle">参与比赛，展示你的创意才华</p>
+                </div>
+
+                <div class="competition-list">
+                    <!-- 赛事卡片 1 -->
+                    <div class="competition-card" onclick="window.open('#', '_blank')">
+                        <div class="competition-cover">🏆</div>
+                        <div class="competition-info">
+                            <h3 class="competition-title">全国青少年人工智能辅助生成数字艺术创作者大赛</h3>
+                            <p class="competition-org">主办单位：文化和旅游部艺术发展中心</p>
+                            <div class="competition-meta">
+                                <span class="competition-deadline">⏰ 截止日期：2026年5月31日</span>
+                                <button class="competition-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 赛事卡片 2 -->
+                    <div class="competition-card" onclick="window.open('#', '_blank')">
+                        <div class="competition-cover">🎨</div>
+                        <div class="competition-info">
+                            <h3 class="competition-title">全国儿童创意绘画大赛</h3>
+                            <p class="competition-org">主办单位：中国美术家协会</p>
+                            <div class="competition-meta">
+                                <span class="competition-deadline">⏰ 截止日期：2026年6月15日</span>
+                                <button class="competition-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 赛事卡片 3 -->
+                    <div class="competition-card" onclick="window.open('#', '_blank')">
+                        <div class="competition-cover">📚</div>
+                        <div class="competition-info">
+                            <h3 class="competition-title">全国青少年绘本创作大赛</h3>
+                            <p class="competition-org">主办单位：中国儿童文学研究会</p>
+                            <div class="competition-meta">
+                                <span class="competition-deadline">⏰ 截止日期：2026年7月1日</span>
+                                <button class="competition-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 赛事卡片 4 -->
+                    <div class="competition-card" onclick="window.open('#', '_blank')">
+                        <div class="competition-cover">✨</div>
+                        <div class="competition-info">
+                            <h3 class="competition-title">AI创意写作挑战赛</h3>
+                            <p class="competition-org">主办单位：中国作家协会</p>
+                            <div class="competition-meta">
+                                <span class="competition-deadline">⏰ 截止日期：2026年8月1日</span>
+                                <button class="competition-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 底部栏 -->
+    <footer class="bottom-bar">
+        <a href="index.html">首页</a>
+        <span>|</span>
+        <a href="profile.html">个人中心</a>
+        <span>|</span>
+        <a href="#">隐私政策</a>
+        <span>|</span>
+        <a href="#">用户协议</a>
+        <span>|</span>
+        <a href="#">联系客服</a>
+    </footer>
+</div>
+
+</body>
+</html>
