@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家长管控 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 页面顶部导航 */
+        .page-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 主体内容 */
+        .main-content {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-soft) 100%);
+            border-radius: var(--radius-lg);
+            font-size: 1.75rem;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* 介绍区域 */
+        .intro-box {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-soft) 100%);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* 控制面板 */
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .control-row:hover {
+            background: var(--bg);
+        }
+
+        .control-row:last-child {
+            border-bottom: none;
+        }
+
+        .control-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-icon-box {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--bg) 100%);
+            border-radius: var(--radius);
+            font-size: 1.35rem;
+        }
+
+        .control-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0 0 0.25rem 0;
+        }
+
+        .control-info p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ddd;
+            transition: .3s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .time-limit-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .time-select {
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            color: var(--text);
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-soft);
+        }
+
+        .time-select.hidden {
+            display: none;
+        }
+
+        /* 保存按钮 */
+        .save-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-full);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .page-nav {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+
+            .page-card {
+                padding: 1.5rem;
+            }
+
+            .control-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .control-left {
+                width: 100%;
+            }
+
+            .time-limit-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+    <script src="js/main.js"></script>
+    <script>
+        (function(){
+            function hideLoading(){
+                var el=document.getElementById('loadingOverlay');
+                if(el)el.style.display='none';
+            }
+            if(document.readyState==='complete'||document.readyState==='interactive'){
+                setTimeout(hideLoading,0);
+            }else{
+                document.addEventListener('DOMContentLoaded',hideLoading);
+            }
+            setTimeout(hideLoading,8000);
+        })();
+    </script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 家长管控页面 ========== -->
+<div class="page workspace-page">
+    <!-- 顶部导航 -->
+    <header class="page-nav">
+        <a href="profile-parent.html" class="back-btn">
+            <span class="back-arrow">←</span> 返回
+        </a>
+        <h1 class="page-title">家长管控</h1>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="main-content">
+        <div class="page-card">
+            <div class="card-header">
+                <div class="card-icon">🛡️</div>
+                <div>
+                    <h2 class="card-title">安全管控设置</h2>
+                    <p class="card-subtitle">为孩子设置健康合理的使用限制</p>
+                </div>
+            </div>
+
+            <div class="intro-box">
+                <p>在此页面您可以设置多项安全管控功能，包括使用时长限制、主题自定义权限、消费验证等，帮助孩子养成健康的使用习惯。</p>
+            </div>
+
+            <!-- 管控选项列表 -->
+            <div class="control-list">
+                <!-- 每日使用时长限制 -->
+                <div class="control-row">
+                    <div class="control-left">
+                        <div class="control-icon-box">⏰</div>
+                        <div class="control-info">
+                            <h4>每日使用时长限制</h4>
+                            <p id="timeLimitDesc">限制孩子每天使用时间</p>
+                        </div>
+                    </div>
+                    <div class="time-limit-group">
+                        <label class="switch">
+                            <input type="checkbox" id="timeLimit" onchange="toggleTimeLimitSetting()">
+                            <span class="slider"></span>
+                        </label>
+                        <select id="timeLimitHours" class="time-select hidden" onchange="updateTimeLimitDesc()">
+                            <option value="1">1小时</option>
+                            <option value="2">2小时</option>
+                            <option value="3">3小时</option>
+                            <option value="4">4小时</option>
+                            <option value="5">5小时</option>
+                            <option value="6">6小时</option>
+                            <option value="8">8小时</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 禁用自定义主题 -->
+                <div class="control-row">
+                    <div class="control-left">
+                        <div class="control-icon-box">🎨</div>
+                        <div class="control-info">
+                            <h4>禁用自定义主题</h4>
+                            <p>开启后只允许使用预设主题</p>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="disableCustom">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- 消费前需验证密码 -->
+                <div class="control-row">
+                    <div class="control-left">
+                        <div class="control-icon-box">💳</div>
+                        <div class="control-info">
+                            <h4>消费前需验证密码</h4>
+                            <p>每次消费都需要家长密码确认</p>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="paymentVerify" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- 禁用应用内评分 -->
+                <div class="control-row">
+                    <div class="control-left">
+                        <div class="control-icon-box">⭐</div>
+                        <div class="control-info">
+                            <h4>禁用应用内评分</h4>
+                            <p>防止误触或诱导评分</p>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="disableRating">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- 禁用分享功能 -->
+                <div class="control-row">
+                    <div class="control-left">
+                        <div class="control-icon-box">🔗</div>
+                        <div class="control-info">
+                            <h4>禁用分享功能</h4>
+                            <p>限制作品分享到外部平台</p>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="disableShare">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- 夜间模式强制启用 -->
+                <div class="control-row">
+                    <div class="control-left">
+                        <div class="control-icon-box">🌙</div>
+                        <div class="control-info">
+                            <h4>夜间模式强制启用</h4>
+                            <p>自动过滤蓝光保护视力</p>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="forceNightMode">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="save-btn" onclick="saveParentSettings()">💾 保存设置</button>
+        </div>
+    </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+    // 加载保存的设置
+    function loadParentSettings() {
+        const saved = localStorage.getItem('parentSettings');
+        if (saved) {
+            try {
+                const settings = JSON.parse(saved);
+                document.getElementById('timeLimit').checked = settings.timeLimit || false;
+                document.getElementById('disableCustom').checked = settings.disableCustom || false;
+                document.getElementById('paymentVerify').checked = settings.paymentVerify !== false;
+                document.getElementById('disableRating').checked = settings.disableRating || false;
+                document.getElementById('disableShare').checked = settings.disableShare || false;
+                document.getElementById('forceNightMode').checked = settings.forceNightMode || false;
+                if (settings.timeLimitHours) {
+                    document.getElementById('timeLimitHours').value = settings.timeLimitHours;
+                }
+                toggleTimeLimitSetting();
+                updateTimeLimitDesc();
+            } catch (e) {
+                console.error('加载家长设置失败', e);
+            }
+        }
+    }
+
+    // 切换时长限制设置显示
+    function toggleTimeLimitSetting() {
+        const isEnabled = document.getElementById('timeLimit').checked;
+        const timeSelect = document.getElementById('timeLimitHours');
+        if (isEnabled) {
+            timeSelect.classList.remove('hidden');
+        } else {
+            timeSelect.classList.add('hidden');
+        }
+    }
+
+    // 更新时长限制描述
+    function updateTimeLimitDesc() {
+        const hours = document.getElementById('timeLimitHours').value;
+        document.getElementById('timeLimitDesc').textContent = '每日限制 ' + hours + ' 小时';
+    }
+
+    // 保存设置
+    function saveParentSettings() {
+        const settings = {
+            timeLimit: document.getElementById('timeLimit').checked,
+            timeLimitHours: document.getElementById('timeLimitHours').value,
+            disableCustom: document.getElementById('disableCustom').checked,
+            paymentVerify: document.getElementById('paymentVerify').checked,
+            disableRating: document.getElementById('disableRating').checked,
+            disableShare: document.getElementById('disableShare').checked,
+            forceNightMode: document.getElementById('forceNightMode').checked,
+            updatedAt: new Date().toLocaleDateString('zh-CN')
+        };
+
+        localStorage.setItem('parentSettings', JSON.stringify(settings));
+        showToast('家长设置已保存', 'success');
+    }
+
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        loadParentSettings();
+    });
+</script>
+</body>
+</html>
