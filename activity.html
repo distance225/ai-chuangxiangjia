@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主题活动 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 主题活动页面 ========== -->
+<div class="page workspace-page" id="activityPage">
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <a href="index.html" class="top-logo">
+                <div class="top-logo-icon">🎨</div>
+                <span class="top-logo-text">AI 创想家</span>
+            </a>
+        </div>
+        
+        <div class="top-bar-center">
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='competition.html'">🏆 热门赛事</a>
+            <a href="javascript:void(0)" class="nav-link-item active" onclick="location.href='activity.html'">🎪 主题活动</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='growth.html'">📊 作品与成长</a>
+        </div>
+        
+        <div class="top-bar-right">
+            <button class="icon-btn" title="消息通知">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+            <button class="tutorial-btn" title="新手教程" onclick="location.href='onboarding.html'">
+                <span class="btn-text">新手教程</span>
+            </button>
+            <div class="user-avatar-btn" onclick="location.href='profile.html'" title="个人中心">
+                <div class="user-avatar-small">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="workspace-main">
+        <!-- 左侧功能栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='workspace.html'">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">创作中心</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='story.html'">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">故事创作</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='picturebook.html'">
+                    <span class="nav-item-icon">📚</span>
+                    <span class="nav-item-text">绘本生成</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='character.html'">
+                    <span class="nav-item-icon">🎭</span>
+                    <span class="nav-item-text">角色工坊</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <div class="content-area">
+            <!-- 主题活动 -->
+            <section class="activity-page" id="activitySection">
+                <div class="page-header">
+                    <h1 class="page-title">🎪 主题活动</h1>
+                    <p class="page-subtitle">参与限时活动，赢取特别奖励</p>
+                </div>
+
+                <div class="activity-cards">
+                    <!-- 活动卡片 1 -->
+                    <div class="activity-card featured">
+                        <div class="activity-badge">热门</div>
+                        <div class="activity-icon">🌸</div>
+                        <h3 class="activity-title">春日主题创作赛</h3>
+                        <p class="activity-desc">用画笔和文字描绘你心中的春天</p>
+                        <div class="activity-countdown">
+                            ⏰ 距离结束还有 <span class="countdown-num">3天</span>
+                        </div>
+                        <button class="activity-btn" onclick="showToast('活动详情即将推出', 'success')">立即参与</button>
+                    </div>
+
+                    <!-- 活动卡片 2 -->
+                    <div class="activity-card">
+                        <div class="activity-icon">🚀</div>
+                        <h3 class="activity-title">科幻故事挑战</h3>
+                        <p class="activity-desc">创作你的太空探险故事</p>
+                        <div class="activity-countdown">
+                            ⏰ 距离结束还有 <span class="countdown-num">7天</span>
+                        </div>
+                        <button class="activity-btn" onclick="showToast('活动详情即将推出', 'success')">立即参与</button>
+                    </div>
+
+                    <!-- 活动卡片 3 -->
+                    <div class="activity-card">
+                        <div class="activity-icon">🎂</div>
+                        <h3 class="activity-title">生日特别活动</h3>
+                        <p class="activity-desc">为好朋友设计生日绘本</p>
+                        <div class="activity-countdown">
+                            ⏰ 距离结束还有 <span class="countdown-num">15天</span>
+                        </div>
+                        <button class="activity-btn" onclick="showToast('活动详情即将推出', 'success')">立即参与</button>
+                    </div>
+
+                    <!-- 活动卡片 4 -->
+                    <div class="activity-card">
+                        <div class="activity-icon">🐰</div>
+                        <h3 class="activity-title">动物世界主题</h3>
+                        <p class="activity-desc">探索动物王国的奥秘</p>
+                        <div class="activity-countdown">
+                            ⏰ 距离结束还有 <span class="countdown-num">21天</span>
+                        </div>
+                        <button class="activity-btn secondary" onclick="showToast('敬请期待', 'success')">即将开始</button>
+                    </div>
+
+                    <!-- 活动卡片 5 -->
+                    <div class="activity-card">
+                        <div class="activity-icon">🎓</div>
+                        <h3 class="activity-title">开学季创作</h3>
+                        <p class="activity-desc">分享你的校园故事</p>
+                        <div class="activity-countdown">
+                            ⏰ 距离结束还有 <span class="countdown-num">30天</span>
+                        </div>
+                        <button class="activity-btn secondary" onclick="showToast('敬请期待', 'success')">即将开始</button>
+                    </div>
+
+                    <!-- 活动卡片 6 -->
+                    <div class="activity-card">
+                        <div class="activity-icon">🎃</div>
+                        <h3 class="activity-title">万圣节特别篇</h3>
+                        <p class="activity-desc">创作恐怖又好玩的故事</p>
+                        <div class="activity-countdown">
+                            ⏰ 距离开始还有 <span class="countdown-num">45天</span>
+                        </div>
+                        <button class="activity-btn secondary" onclick="showToast('敬请期待', 'success')">即将开始</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 底部栏 -->
+    <footer class="bottom-bar">
+        <a href="index.html">首页</a>
+        <span>|</span>
+        <a href="profile.html">个人中心</a>
+        <span>|</span>
+        <a href="#">隐私政策</a>
+        <span>|</span>
+        <a href="#">用户协议</a>
+        <span>|</span>
+        <a href="#">联系客服</a>
+    </footer>
+</div>
+
+</body>
+</html>
