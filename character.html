@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色工坊 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" ></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 角色工坊页面 ========== -->
+<div class="page workspace-page" id="characterPage">
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <a href="index.html" class="top-logo">
+                <div class="top-logo-icon">🎨</div>
+                <span class="top-logo-text">AI 创想家</span>
+            </a>
+        </div>
+        
+        <div class="top-bar-center">
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='competition.html'">🏆 热门赛事</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='activity.html'">🎪 主题活动</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='growth.html'">📊 作品与成长</a>
+        </div>
+        
+        <div class="top-bar-right">
+            <button class="icon-btn" title="消息通知">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+            <button class="tutorial-btn" title="新手教程" onclick="location.href='onboarding.html'">
+                <span class="btn-text">新手教程</span>
+            </button>
+            <div class="user-avatar-btn" onclick="location.href='profile.html'" title="个人中心">
+                <div class="user-avatar-small">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="workspace-main">
+        <!-- 左侧功能栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='workspace.html'">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">创作中心</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='story.html'">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">故事创作</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='picturebook.html'">
+                    <span class="nav-item-icon">📚</span>
+                    <span class="nav-item-text">绘本生成</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item active" onclick="location.href='character.html'">
+                    <span class="nav-item-icon">🎭</span>
+                    <span class="nav-item-text">角色工坊</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <div class="content-area">
+            <!-- 角色工坊 -->
+            <section class="character-studio" id="characterSection">
+                <div class="creator-header">
+                    <h1 class="creator-title">🎭 角色工坊</h1>
+                    <p class="step-hint">设计并保存你的专属角色</p>
+                </div>
+
+                <div class="character-layout">
+                    <!-- 左侧：角色预览 -->
+                    <div class="character-preview-panel">
+                        <div class="character-display" id="studioCharacter"></div>
+                        <div class="character-actions-float">
+                            <button class="btn btn-primary" onclick="generateCharacterArt()">🎨 生成立绘</button>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：角色配置 -->
+                    <div class="character-config-panel">
+                        <div class="config-tabs">
+                            <button class="config-tab active" onclick="switchConfigTab(0)">基础</button>
+                            <button class="config-tab" onclick="switchConfigTab(1)">外观</button>
+                            <button class="config-tab" onclick="switchConfigTab(2)">装扮</button>
+                        </div>
+
+                        <!-- 标签1: 基础 -->
+                        <div class="config-content active" data-tab="0">
+                            <div class="config-group">
+                                <div class="config-label">性别</div>
+                                <div class="config-options">
+                                    <div class="config-option selected" onclick="selectConfigOption(this, '🧒')">🧒 男孩</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👧')">👧 女孩</div>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <div class="config-label">年龄</div>
+                                <div class="config-options">
+                                    <div class="config-option selected" onclick="selectConfigOption(this, '🧒')">🧒 儿童</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👦')">👦 少年</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '🧑')">🧑 青年</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 标签2: 外观 -->
+                        <div class="config-content" data-tab="1">
+                            <div class="config-group">
+                                <div class="config-label">发型</div>
+                                <div class="config-options">
+                                    <div class="config-option selected" onclick="selectConfigOption(this, '💇')">💇 短发</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👱')">👱 长发</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '🦱')">🦱 卷发</div>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <div class="config-label">眼睛颜色</div>
+                                <div class="color-picker">
+                                    <div class="color-swatch selected" style="background: #4A90E2;" onclick="selectColor('#4A90E2', this)"></div>
+                                    <div class="color-swatch" style="background: #2D3748;" onclick="selectColor('#2D3748', this)"></div>
+                                    <div class="color-swatch" style="background: #8B4513;" onclick="selectColor('#8B4513', this)"></div>
+                                    <div class="color-swatch" style="background: #06D6A0;" onclick="selectColor('#06D6A0', this)"></div>
+                                    <div class="color-swatch" style="background: #9B5DE5;" onclick="selectColor('#9B5DE5', this)"></div>
+                                    <div class="color-swatch custom" onclick="showCustomColor(this)">+</div>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <div class="config-label">肤色</div>
+                                <div class="color-picker">
+                                    <div class="color-swatch selected" style="background: #FFDAB9;" onclick="selectSkinColor('#FFDAB9', this)"></div>
+                                    <div class="color-swatch" style="background: #F5CBA7;" onclick="selectSkinColor('#F5CBA7', this)"></div>
+                                    <div class="color-swatch" style="background: '#D2691E';" onclick="selectSkinColor('#D2691E', this)"></div>
+                                    <div class="color-swatch custom" onclick="showCustomColor(this)">+</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 标签3: 装扮 -->
+                        <div class="config-content" data-tab="2">
+                            <div class="config-group">
+                                <div class="config-label">服装</div>
+                                <div class="config-options">
+                                    <div class="config-option selected" onclick="selectConfigOption(this, '🎒')">🎒 校服</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👗')">👗 裙子</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👚')">👚 上衣</div>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <div class="config-label">配饰</div>
+                                <div class="config-options">
+                                    <div class="config-option" onclick="selectConfigOption(this, '👓')">👓 眼镜</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '🎀')">🎀 发饰</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👜')">👜 包包</div>
+                                </div>
+                            </div>
+                            <div class="config-group">
+                                <div class="config-label">鞋子</div>
+                                <div class="config-options">
+                                    <div class="config-option selected" onclick="selectConfigOption(this, '👟')">👟 运动鞋</div>
+                                    <div class="config-option" onclick="selectConfigOption(this, '👠')">👠 小皮鞋</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;" onclick="saveCharacter()">
+                        💾 保存角色
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 底部栏 -->
+    <footer class="bottom-bar">
+        <a href="index.html">首页</a>
+        <span>|</span>
+        <a href="profile.html">个人中心</a>
+        <span>|</span>
+        <a href="#">隐私政策</a>
+        <span>|</span>
+        <a href="#">用户协议</a>
+        <span>|</span>
+        <a href="#">联系客服</a>
+    </footer>
+
+    <!-- 角色详情模态框 -->
+    <div class="modal hidden" id="characterDetailModal">
+        <div class="modal-overlay" onclick="closeCharacterDetailModal()"></div>
+        <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 id="characterDetailTitle">角色详情</h2>
+                <button class="modal-close" onclick="closeCharacterDetailModal()">×</button>
+            </div>
+            <div class="modal-body" id="characterDetailContent">
+                <!-- 角色详情内容将通过JS动态生成 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeCharacterDetailModal()">关闭</button>
+                <button class="btn btn-primary" onclick="useCharacterInPictureBook()">用于绘本生成</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/character-art.js"></script>
+</body>
+</html>
