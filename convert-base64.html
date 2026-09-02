@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片转Base64工具</title>
+</head>
+<body>
+    <h1>图片转Base64</h1>
+    <img id="preview" style="max-width: 300px; max-height: 300px; margin: 20px 0;">
+    <div id="result" style="word-break: break-all; padding: 20px; background: #f5f5f5; border-radius: 8px;"></div>
+
+    <script>
+        const img = new Image();
+        img.onload = function() {
+            document.getElementById('preview').src = img.src;
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const base64 = canvas.toDataURL('image/jpeg', 0.8);
+            document.getElementById('result').textContent = base64;
+
+            // 同时输出一个可以直接复制的短版本
+            console.log('=== BASE64 数据开始 ===');
+            console.log(base64);
+            console.log('=== BASE64 数据结束 ===');
+        };
+        img.src = 'images/6c7463ec783e59d8a70482395d8f6bba.jpg';
+    </script>
+</body>
+</html>
