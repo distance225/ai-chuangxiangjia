@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意见反馈 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 页面顶部导航 */
+        .page-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .nav-tab {
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-soft) 100%);
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        /* 主体内容 */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-soft) 100%);
+            border-radius: var(--radius-lg);
+            font-size: 1.75rem;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .feedback-intro {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            padding: 1.25rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            color: #92400E;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            border-left: 4px solid #F59E0B;
+        }
+
+        /* 评分区域 */
+        .rating-area {
+            margin-bottom: 2rem;
+        }
+
+        .rating-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .star {
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.2;
+            filter: grayscale(100%);
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .star:hover,
+        .star.active {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.15);
+        }
+
+        .star.hovered {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .rating-feedback {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            min-height: 1.5rem;
+            padding-left: 0.5rem;
+        }
+
+        /* 表单元素 */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.625rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1.125rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--bg);
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px var(--primary-soft);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .upload-section {
+            margin: 1.5rem 0;
+        }
+
+        .upload-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-left: 0.5rem;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        /* 成功消息 */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-desc {
+            color: var(--text-secondary);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .page-nav {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .nav-tabs {
+                order: 100;
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+            }
+
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+
+            .page-card {
+                padding: 1.5rem;
+            }
+
+            .star-rating {
+                font-size: 2rem;
+            }
+
+            .password-row {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 意见反馈页面 ========== -->
+<div class="page workspace-page">
+    <!-- 顶部导航 -->
+    <header class="page-nav">
+        <a href="profile.html" class="back-btn">
+            <span class="back-arrow">←</span> 返回
+        </a>
+        <h1 class="page-title">意见反馈</h1>
+        <nav class="nav-tabs">
+            <a href="profile-basic.html" class="nav-tab">👤 资料</a>
+            <a href="profile-subscription.html" class="nav-tab">💎 订阅</a>
+            <a href="profile-parent.html" class="nav-tab">🔐 家长</a>
+        </nav>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="main-content">
+        <div class="page-card" id="feedbackForm">
+            <div class="card-header">
+                <div class="card-icon">💬</div>
+                <div>
+                    <h2 class="card-title">意见反馈</h2>
+                    <p class="card-subtitle">你的建议让我们变得更好</p>
+                </div>
+            </div>
+
+            <div class="feedback-intro">
+                💌 你的反馈对我们非常重要，帮助我们改进产品！请详细描述你的想法或遇到的问题。
+            </div>
+
+            <form class="feedback-form" onsubmit="submitFeedback(event)">
+                <!-- 评分 -->
+                <div class="rating-area">
+                    <label class="rating-label">⭐ 作品评分</label>
+                    <div class="star-rating">
+                        <button type="button" class="star" data-value="1">★</button>
+                        <button type="button" class="star" data-value="2">★</button>
+                        <button type="button" class="star" data-value="3">★</button>
+                        <button type="button" class="star" data-value="4">★</button>
+                        <button type="button" class="star" data-value="5">★</button>
+                    </div>
+                    <p class="rating-feedback" id="ratingText"></p>
+                </div>
+
+                <!-- 问题描述 -->
+                <div class="form-group">
+                    <label class="form-label">📝 问题描述</label>
+                    <textarea class="form-textarea" id="description" placeholder="告诉我们你的想法或遇到的问题..." rows="4"></textarea>
+                </div>
+
+                <!-- 截图上传 -->
+                <div class="upload-section">
+                    <label class="upload-label">
+                        📷 上传截图（最多3张）
+                        <span class="upload-hint">支持 JPG、PNG 格式</span>
+                    </label>
+                    <div class="upload-zone" onclick="document.getElementById('screenshotUpload').click()">
+                        <div class="upload-icon">📸</div>
+                        <p class="upload-text">点击或拖拽图片到此处上传</p>
+                    </div>
+                    <input type="file" id="screenshotUpload" accept="image/*" multiple style="display: none;" onchange="handleUpload(this)">
+                    <div class="preview-grid" id="uploadPreview"></div>
+                </div>
+
+                <!-- 联系方式 -->
+                <div class="form-group">
+                    <label class="form-label">📧 联系方式（选填）</label>
+                    <input type="text" class="form-input" id="contact" placeholder="电话 / 邮箱">
+                </div>
+
+                <!-- 提交按钮 -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🚀 提交反馈
+                </button>
+            </form>
+        </div>
+
+        <!-- 成功消息 -->
+        <div class="page-card success-message" id="successMessage">
+            <div class="success-icon">✅</div>
+            <h3 class="success-title">感谢你的反馈！</h3>
+            <p class="success-desc">我们已收到你的建议，将会尽快处理。</p>
+        </div>
+    </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+    let selectedRating = 0;
+    let uploadedImages = [];
+
+    // 初始化评分
+    function initStarRating() {
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.value);
+                updateStarDisplay();
+            });
+            star.addEventListener('mouseenter', () => {
+                const hoverValue = parseInt(star.dataset.value);
+                stars.forEach((s, idx) => {
+                    s.style.opacity = idx < hoverValue ? '1' : '0.2';
+                });
+            });
+        });
+
+        document.querySelector('.star-rating').addEventListener('mouseleave', () => {
+            updateStarDisplay();
+        });
+    }
+
+    function updateStarDisplay() {
+        const stars = document.querySelectorAll('.star');
+        const ratingText = document.getElementById('ratingText');
+
+        const messages = ['', '很差', '一般', '还行', '不错', '非常棒！'];
+        stars.forEach((star, idx) => {
+            star.classList.toggle('active', idx < selectedRating);
+            star.style.opacity = idx < selectedRating ? '1' : '0.2';
+        });
+
+        if (ratingText) {
+            ratingText.textContent = messages[selectedRating] || '请选择评分';
+            ratingText.style.color = selectedRating >= 4 ? 'var(--success)' : selectedRating >= 3 ? 'var(--primary)' : 'var(--text-light)';
+        }
+    }
+
+    // 图片上传
+    function handleUpload(input) {
+        const files = input.files;
+        if (files.length + uploadedImages.length > 3) {
+            showToast('最多只能上传3张截图', 'error');
+            return;
+        }
+
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                showToast('请上传图片文件', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImages.push({
+                    data: e.target.result,
+                    name: file.name
+                });
+                renderUploadedImages();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function renderUploadedImages() {
+        const container = document.getElementById('uploadPreview');
+        container.innerHTML = '';
+
+        uploadedImages.forEach((img, index) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                <img src="${img.data}" alt="screenshot ${index + 1}">
+                <button type="button" class="remove-btn" onclick="removeImage(${index})">×</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function removeImage(index) {
+        uploadedImages.splice(index, 1);
+        renderUploadedImages();
+    }
+
+    // 提交反馈
+    function submitFeedback(e) {
+        e.preventDefault();
+
+        const description = document.getElementById('description').value.trim();
+        const contact = document.getElementById('contact').value.trim();
+
+        if (selectedRating === 0) {
+            showToast('请选择作品评分', 'error');
+            return;
+        }
+
+        if (!description) {
+            showToast('请填写问题描述', 'error');
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        submitBtn.textContent = '提交中...';
+
+        // 模拟网络请求延迟
+        setTimeout(() => {
+            const feedback = {
+                rating: selectedRating,
+                description: description,
+                images: uploadedImages.map(img => img.name),
+                contact: contact,
+                createdAt: new Date().toISOString()
+            };
+
+            // 保存到 localStorage
+            let feedbacks = JSON.parse(localStorage.getItem('userFeedbacks') || '[]');
+            feedbacks.unshift(feedback);
+            localStorage.setItem('userFeedbacks', JSON.stringify(feedbacks));
+
+            showToast('✅ 感谢你的反馈！', 'success');
+
+            // 显示成功消息
+            document.getElementById('feedbackForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+
+            // 3秒后返回个人中心
+            setTimeout(() => {
+                location.href = 'profile.html';
+            }, 3000);
+        }, 1500);
+    }
+
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        initStarRating();
+    });
+</script>
+</body>
+</html>
