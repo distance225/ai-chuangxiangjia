@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创作中心 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 创作中心页面 ========== -->
+<div class="page workspace-page" id="workspacePage">
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <a href="index.html" class="top-logo">
+                <div class="top-logo-icon">🎨</div>
+                <span class="top-logo-text">AI 创想家</span>
+            </a>
+        </div>
+        
+        <div class="top-bar-center">
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='competition.html'">🏆 热门赛事</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='activity.html'">🎪 主题活动</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='growth.html'">📊 作品与成长</a>
+        </div>
+        
+        <div class="top-bar-right">
+            <button class="icon-btn" title="消息通知">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+            <button class="tutorial-btn" title="新手教程" onclick="location.href='onboarding.html'">
+                <span class="btn-text">新手教程</span>
+            </button>
+            <div class="user-avatar-btn" onclick="location.href='profile.html'" title="个人中心">
+                <div class="user-avatar-small">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="workspace-main">
+        <!-- 左侧功能栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item active" onclick="location.href='workspace.html'">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">创作中心</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='story.html'">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">故事创作</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='picturebook.html'">
+                    <span class="nav-item-icon">📚</span>
+                    <span class="nav-item-text">绘本生成</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='character.html'">
+                    <span class="nav-item-icon">🎭</span>
+                    <span class="nav-item-text">角色工坊</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <div class="content-area">
+            <!-- 创作中心首页 / homeSection -->
+            <section class="workspace-home" id="homeSection">
+                <div class="welcome-section">
+                    <h1 class="welcome-title" id="welcomeTitle">早上好，小朋友！👋</h1>
+                    <p class="welcome-subtitle" id="welcomeSubtitle">今天想创作什么有趣的故事呢？</p>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="quick-action-card" onclick="location.href='story.html'">
+                        <div class="quick-action-icon">📝</div>
+                        <h3 class="quick-action-title">故事创作</h3>
+                        <p class="quick-action-desc">让AI帮你写出精彩故事</p>
+                    </div>
+                    <div class="quick-action-card" onclick="location.href='picturebook.html'">
+                        <div class="quick-action-icon">📚</div>
+                        <h3 class="quick-action-title">绘本生成</h3>
+                        <p class="quick-action-desc">图文并茂的绘本制作</p>
+                    </div>
+                    <div class="quick-action-card" onclick="location.href='character.html'">
+                        <div class="quick-action-icon">🎭</div>
+                        <h3 class="quick-action-title">角色工坊</h3>
+                        <p class="quick-action-desc">设计专属角色形象</p>
+                    </div>
+                </div>
+
+                <div class="recent-works">
+                    <h2 class="section-title">📁 最近作品</h2>
+                    <div class="works-grid" id="worksGrid">
+                        <!-- 作品卡片将通过JS动态加载 -->
+                        <div class="work-card" style="display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--text-light);">
+                            暂无作品，开始创作吧！
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 其他section留空，通过导航跳转到独立页面 -->
+            <section class="competition-page hidden" id="competitionSection"></section>
+            <section class="activity-page hidden" id="activitySection"></section>
+            <section class="growth-report-page hidden" id="growthReportSection"></section>
+            <section class="story-creator hidden" id="storySection"></section>
+            <section class="picture-book-creator hidden" id="pictureBookSection"></section>
+            <section class="character-studio hidden" id="characterSection"></section>
+        </div>
+    </main>
+
+    <!-- 底部栏 -->
+    <footer class="bottom-bar">
+        <a href="index.html">首页</a>
+        <span>|</span>
+        <a href="profile.html">个人中心</a>
+        <span>|</span>
+        <a href="#">隐私政策</a>
+        <span>|</span>
+        <a href="#">用户协议</a>
+        <span>|</span>
+        <a href="#">联系客服</a>
+        <span>|</span>
+        <a href="about.html">关于我们</a>
+    </footer>
+</div>
+
+</body>
+<script>
+    // 根据时间更新问候语
+    function updateGreeting() {
+        const hour = new Date().getHours();
+        let greeting = '早上好';
+
+        if (hour >= 5 && hour < 9) {
+            greeting = '早上好';
+        } else if (hour >= 9 && hour < 12) {
+            greeting = '上午好';
+        } else if (hour >= 12 && hour < 14) {
+            greeting = '中午好';
+        } else if (hour >= 14 && hour < 18) {
+            greeting = '下午好';
+        } else {
+            greeting = '晚上好';
+        }
+
+        document.getElementById('welcomeTitle').textContent = greeting + '，小朋友！👋';
+    }
+
+    // 页面加载时执行
+    document.addEventListener('DOMContentLoaded', updateGreeting);
+</script>
+</html>
