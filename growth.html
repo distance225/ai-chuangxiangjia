@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品与成长 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 作品与成长页面 ========== -->
+<div class="page workspace-page" id="growthPage">
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <a href="index.html" class="top-logo">
+                <div class="top-logo-icon">🎨</div>
+                <span class="top-logo-text">AI 创想家</span>
+            </a>
+        </div>
+        
+        <div class="top-bar-center">
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='competition.html'">🏆 热门赛事</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='activity.html'">🎪 主题活动</a>
+            <a href="javascript:void(0)" class="nav-link-item active" onclick="location.href='growth.html'">📊 作品与成长</a>
+        </div>
+        
+        <div class="top-bar-right">
+            <button class="icon-btn" title="消息通知">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+            <button class="tutorial-btn" title="新手教程" onclick="location.href='onboarding.html'">
+                <span class="btn-text">新手教程</span>
+            </button>
+            <div class="user-avatar-btn" onclick="location.href='profile.html'" title="个人中心">
+                <div class="user-avatar-small">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="workspace-main">
+        <!-- 左侧功能栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='workspace.html'">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">创作中心</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='story.html'">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">故事创作</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='picturebook.html'">
+                    <span class="nav-item-icon">📚</span>
+                    <span class="nav-item-text">绘本生成</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='character.html'">
+                    <span class="nav-item-icon">🎭</span>
+                    <span class="nav-item-text">角色工坊</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <div class="content-area">
+            <!-- 作品展示页面 -->
+            <section class="works-showcase-page" id="worksShowcaseSection">
+                <div class="page-header">
+                    <h1 class="page-title">📊 我的作品</h1>
+                    <p class="page-subtitle">这里展示你创作的所有故事、绘本和角色</p>
+                </div>
+
+                <!-- 作品统计概览 -->
+                <div class="works-overview" id="worksOverview">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalStories">0</div>
+                            <div class="stat-label">我的故事</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalPictureBooks">0</div>
+                            <div class="stat-label">我的绘本</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎭</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalCharacters">0</div>
+                            <div class="stat-label">我的角色</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 三个作品类别 -->
+                <div class="works-categories">
+
+                    <!-- 我的故事 -->
+                    <div class="category-section">
+                        <div class="category-header">
+                            <h2 class="category-title">📝 我的故事</h2>
+                            <span class="category-count" id="storyCountBadge">0</span>
+                        </div>
+                        <div class="works-grid" id="storiesList">
+                            <!-- 故事将通过JS实时加载 -->
+                        </div>
+                    </div>
+
+                    <!-- 我的绘本 -->
+                    <div class="category-section">
+                        <div class="category-header">
+                            <h2 class="category-title">📚 我的绘本</h2>
+                            <span class="category-count" id="bookCountBadge">0</span>
+                        </div>
+                        <div class="works-grid" id="pictureBooksList">
+                            <!-- 绘本将通过JS实时加载 -->
+                        </div>
+                    </div>
+
+                    <!-- 我的角色 -->
+                    <div class="category-section">
+                        <div class="category-header">
+                            <h2 class="category-title">🎭 我的角色</h2>
+                            <span class="category-count" id="charCountBadge">0</span>
+                        </div>
+                        <div class="works-grid" id="charactersList">
+                            <!-- 角色将通过JS实时加载 -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 底部栏 -->
+    <footer class="bottom-bar">
+        <a href="index.html">首页</a>
+        <span>|</span>
+        <a href="profile.html">个人中心</a>
+        <span>|</span>
+        <a href="#">隐私政策</a>
+        <span>|</span>
+        <a href="#">用户协议</a>
+        <span>|</span>
+        <a href="#">联系客服</a>
+    </footer>
+</div>
+
+<!-- 故事详情模态框 -->
+<div class="modal hidden" id="storyDetailModal">
+    <div class="modal-overlay" onclick="window.closeStoryDetailModal()"></div>
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h2 id="storyDetailTitle">故事详情</h2>
+            <button class="modal-close" onclick="window.closeStoryDetailModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <p id="storyDetailSource" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;"></p>
+            <div id="storyDetailContent" style="line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap;"></div>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-primary" onclick="window.exportStoryFromGrowth()">📥 导出Word文档</button>
+                <button class="btn btn-ghost" onclick="window.closeStoryDetailModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 绘本详情模态框 -->
+<div class="modal hidden" id="pictureBookDetailModal">
+    <div class="modal-overlay" onclick="window.closePictureBookDetailModal()"></div>
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h2 id="pictureBookDetailTitle">绘本详情</h2>
+            <button class="modal-close" onclick="window.closePictureBookDetailModal()">×</button>
+        </div>
+        <div class="modal-body" id="pictureBookDetailContent">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="window.closePictureBookDetailModal()">关闭</button>
+            <button class="btn btn-primary" onclick="window.exportPictureBookPDF()">导出PDF</button>
+        </div>
+    </div>
+</div>
+
+<!-- 角色详情模态框 -->
+<div class="modal hidden" id="characterDetailModal">
+    <div class="modal-overlay" onclick="window.closeCharacterDetailModal()"></div>
+    <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h2 id="characterDetailTitle">角色详情</h2>
+            <button class="modal-close" onclick="window.closeCharacterDetailModal()">×</button>
+        </div>
+        <div class="modal-body" id="characterDetailContent">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="window.closeCharacterDetailModal()">关闭</button>
+            <button class="btn btn-primary" onclick="window.useCharacterInPictureBook()">用于绘本生成</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========== growth.html专属的查看功能 ==========
+// 所有函数都显式挂载到window，确保onclick可以访问
+
+// 故事详情
+let currentStoryDetail = null;
+window.viewStory = function(title) {
+    const stories = JSON.parse(localStorage.getItem('myStories') || '[]');
+    const story = stories.find(s => s.title === title);
+    if (story) {
+        currentStoryDetail = story;
+        showStoryDetailModal();
+    } else {
+        showToast('故事不存在', 'error');
+    }
+};
+
+window.showStoryDetailModal = function() {
+    const titleEl = document.getElementById('storyDetailTitle');
+    const sourceEl = document.getElementById('storyDetailSource');
+    const contentEl = document.getElementById('storyDetailContent');
+    const modalEl = document.getElementById('storyDetailModal');
+
+    if (!titleEl || !contentEl || !modalEl || !currentStoryDetail) return;
+
+    titleEl.textContent = '📝 ' + currentStoryDetail.title;
+    sourceEl.textContent = '来源：我的创作 · ' + (currentStoryDetail.date || '');
+    contentEl.textContent = currentStoryDetail.content || '暂无内容';
+    modalEl.classList.remove('hidden');
+};
+
+window.closeStoryDetailModal = function() {
+    document.getElementById('storyDetailModal').classList.add('hidden');
+};
+
+// 绘本详情
+let currentPictureBookDetail = null;
+let pictureBookDetailPage = 1;
+const totalPictureBookPages = 8;
+
+window.viewPictureBook = function(title) {
+    const books = JSON.parse(localStorage.getItem('myPictureBooks') || '[]');
+    const book = books.find(b => b.title === title);
+    if (book) {
+        currentPictureBookDetail = book;
+        pictureBookDetailPage = 1;
+        showPictureBookDetailModal();
+    } else {
+        showToast('绘本不存在', 'error');
+    }
+};
+
+window.showPictureBookDetailModal = function() {
+    const titleEl = document.getElementById('pictureBookDetailTitle');
+    const contentEl = document.getElementById('pictureBookDetailContent');
+    const modalEl = document.getElementById('pictureBookDetailModal');
+
+    if (!titleEl || !contentEl || !modalEl || !currentPictureBookDetail) return;
+
+    titleEl.textContent = '📚 ' + (currentPictureBookDetail.title || '我的绘本');
+
+    let html = `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; min-height: 500px;">
+            <button onclick="window.prevPictureBookDetailPage()" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); background: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: all 0.3s; z-index: 10;"
+                    onmouseover="this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.transform='translateY(-50%) scale(1)'">‹</button>
+
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.15); max-width: 600px; width: 100%;">
+                <img id="pictureBookDetailImage" src="" style="width: 100%; height: 450px; object-fit: contain; display: block;" />
+                <div style="padding: 1.5rem; text-align: center; color: var(--text-secondary); font-size: 1rem; border-top: 1px solid var(--border);">
+                    第 <span id="pictureBookDetailPageNum">1</span> / 8 页
+                </div>
+            </div>
+
+            <button onclick="window.nextPictureBookDetailPage()" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: all 0.3s; z-index: 10;"
+                    onmouseover="this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.transform='translateY(-50%) scale(1)'">›</button>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius);">
+            <h4 style="margin: 0 0 0.5rem 0;">📖 绘本描述</h4>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.6;">${currentPictureBookDetail.description || '暂无描述'}</p>
+        </div>
+    `;
+
+    contentEl.innerHTML = html;
+    updatePictureBookDetailPage();
+    modalEl.classList.remove('hidden');
+};
+
+window.prevPictureBookDetailPage = function() {
+    if (pictureBookDetailPage > 1) {
+        pictureBookDetailPage--;
+        updatePictureBookDetailPage();
+    }
+};
+
+window.nextPictureBookDetailPage = function() {
+    if (pictureBookDetailPage < totalPictureBookPages) {
+        pictureBookDetailPage++;
+        updatePictureBookDetailPage();
+    }
+};
+
+window.updatePictureBookDetailPage = function() {
+    const imgEl = document.getElementById('pictureBookDetailImage');
+    const pageNumEl = document.getElementById('pictureBookDetailPageNum');
+    if (imgEl && pageNumEl) {
+        const imgNum = String(pictureBookDetailPage).padStart(2, '0');
+        imgEl.src = './images/' + imgNum + '.jpg';
+        pageNumEl.textContent = pictureBookDetailPage;
+    }
+};
+
+window.closePictureBookDetailModal = function() {
+    document.getElementById('pictureBookDetailModal').classList.add('hidden');
+};
+
+// 角色详情
+let currentCharacterDetail = null;
+window.viewCharacter = function(name) {
+    const chars = JSON.parse(localStorage.getItem('myCharacters') || '[]');
+    const char = chars.find(c => c.name === name);
+    if (char) {
+        currentCharacterDetail = char;
+        showCharacterDetailModal();
+    } else {
+        showToast('角色不存在', 'error');
+    }
+};
+
+window.showCharacterDetailModal = function() {
+    const titleEl = document.getElementById('characterDetailTitle');
+    const contentEl = document.getElementById('characterDetailContent');
+    const modalEl = document.getElementById('characterDetailModal');
+
+    if (!titleEl || !contentEl || !modalEl || !currentCharacterDetail) return;
+
+    titleEl.textContent = '🎭 ' + (currentCharacterDetail.name || '角色详情');
+
+    const charData = currentCharacterDetail.data || {};
+    const hasImage = charData.hasImage && charData.imageData;
+
+    const gender = charData.gender || '👦';
+    const age = charData.age || '🧒';
+    const hair = charData.hair || '💇';
+    const eyeColor = charData.eyeColor || '#4A90E2';
+    const skinColor = charData.skinColor || '#FFDAB9';
+    const clothes = charData.clothes || '🎒';
+    const accessory = charData.accessory || '👓';
+    const shoes = charData.shoes || '👟';
+    const prop = charData.prop || '🪄';
+
+    let html = `
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- 角色立绘展示 -->
+            <div style="text-align: center;">
+                ${hasImage ?
+                    `<img src="${charData.imageData}" style="max-width: 200px; max-height: 200px; border-radius: var(--radius-lg); box-shadow: 0 8px 30px rgba(0,0,0,0.15);">` :
+                    `<div style="width: 200px; height: 200px; background: var(--primary-soft); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 5rem; margin: 0 auto;">🎭</div>`
+                }
+            </div>
+
+            <!-- 基本信息 -->
+            <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-lg);">
+                <h3 style="margin: 0 0 1rem 0; font-size: 1.1rem; color: var(--text);">基本信息</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.95rem;">
+                    <div><strong>名称：</strong>${currentCharacterDetail.name}</div>
+                    <div><strong>性别：</strong>${gender}</div>
+                    <div><strong>年龄：</strong>${age}</div>
+                    <div><strong>发型：</strong>${hair}</div>
+                    <div><strong>瞳色：</strong><span style="display: inline-block; width: 16px; height: 16px; background: ${eyeColor}; border-radius: 50%; vertical-align: middle; margin-left: 5px;"></span></div>
+                    <div><strong>肤色：</strong><span style="display: inline-block; width: 16px; height: 16px; background: ${skinColor}; border-radius: 50%; vertical-align: middle; margin-left: 5px;"></span></div>
+                </div>
+            </div>
+
+            <!-- 装扮详情 -->
+            <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-lg);">
+                <h3 style="margin: 0 0 1rem 0; font-size: 1.1rem; color: var(--text);">装扮细节</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.95rem;">
+                    <div><strong>服装：</strong>${clothes}</div>
+                    <div><strong>配饰：</strong>${accessory}</div>
+                    <div><strong>鞋子：</strong>${shoes}</div>
+                    <div><strong>道具：</strong>${prop}</div>
+                </div>
+            </div>
+
+            <!-- 描述信息 -->
+            <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-lg);">
+                <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: var(--text);">角色描述</h3>
+                <p style="margin: 0; color: var(--text-secondary); line-height: 1.6;">
+                    ${charData.description || '这是一个精心设计的角色，拥有独特的个性和魅力。'}
+                </p>
+            </div>
+
+            <!-- 元数据 -->
+            <div style="font-size: 0.85rem; color: var(--text-light); text-align: center; padding: 0.5rem;">
+                创建于 ${currentCharacterDetail.date || '未知时间'}
+            </div>
+        </div>
+    `;
+
+    contentEl.innerHTML = html;
+    modalEl.classList.remove('hidden');
+};
+
+window.closeCharacterDetailModal = function() {
+    document.getElementById('characterDetailModal').classList.add('hidden');
+};
+
+window.useCharacterInPictureBook = function() {
+    closeCharacterDetailModal();
+    if (currentCharacterDetail) {
+        sessionStorage.setItem('currentCharacterForPictureBook', JSON.stringify(currentCharacterDetail));
+        location.href = 'picturebook.html';
+    }
+};
+
+// 导出故事
+window.exportStoryFromGrowth = function() {
+    if (!currentStoryDetail) return;
+
+    showToast('正在生成PDF...', 'success');
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text(currentStoryDetail.title || '我的故事', 20, 20);
+
+    doc.setFontSize(10);
+    doc.text('创建日期：' + (currentStoryDetail.date || ''), 20, 30);
+
+    doc.setFontSize(12);
+    const content = currentStoryDetail.content || '';
+    const lines = doc.splitTextToSize(content, 170);
+    doc.text(lines, 20, 40);
+
+    doc.save((currentStoryDetail.title || 'story') + '.pdf');
+
+    showToast('✅ 导出成功！', 'success');
+};
+
+// 页面加载时初始化数据
+document.addEventListener('DOMContentLoaded', function() {
+    // 加载所有作品列表
+    loadStoryList();
+    loadPictureBookList();
+    loadCharacterList();
+});
+</script>
+
+</body>
+</html>
