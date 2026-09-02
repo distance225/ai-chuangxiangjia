@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绘本生成 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 绘本生成页面 ========== -->
+<div class="page workspace-page" id="picturebookPage">
+    <!-- 顶部栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <a href="index.html" class="top-logo">
+                <div class="top-logo-icon">🎨</div>
+                <span class="top-logo-text">AI 创想家</span>
+            </a>
+        </div>
+        
+        <div class="top-bar-center">
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='competition.html'">🏆 热门赛事</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='activity.html'">🎪 主题活动</a>
+            <a href="javascript:void(0)" class="nav-link-item" onclick="location.href='growth.html'">📊 作品与成长</a>
+        </div>
+        
+        <div class="top-bar-right">
+            <button class="icon-btn" title="消息通知">
+                🔔
+                <span class="notification-dot"></span>
+            </button>
+            <button class="tutorial-btn" title="新手教程" onclick="location.href='onboarding.html'">
+                <span class="btn-text">新手教程</span>
+            </button>
+            <div class="user-avatar-btn" onclick="location.href='profile.html'" title="个人中心">
+                <div class="user-avatar-small">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="workspace-main">
+        <!-- 左侧功能栏 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='workspace.html'">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">创作中心</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='story.html'">
+                    <span class="nav-item-icon">📝</span>
+                    <span class="nav-item-text">故事创作</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item active" onclick="location.href='picturebook.html'">
+                    <span class="nav-item-icon">📚</span>
+                    <span class="nav-item-text">绘本生成</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" onclick="location.href='character.html'">
+                    <span class="nav-item-icon">🎭</span>
+                    <span class="nav-item-text">角色工坊</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <div class="content-area">
+            <!-- 绘本生成器 -->
+            <section class="picture-book-creator" id="pictureBookSection">
+                <div class="creator-header">
+                    <h1 class="creator-title">📚 绘本生成</h1>
+                    <p class="step-hint">导入故事，选择画风，生成精美绘本</p>
+                </div>
+
+                <!-- 导入选择区域 -->
+                <div id="importSelection">
+                    <div class="options-grid" style="max-width: 600px; margin: 0 auto 2rem; grid-template-columns: repeat(2, 1fr);">
+                        <div class="option-card import-card" onclick="showImportModal()">
+                            <div class="option-icon" style="font-size: 3rem;">📖</div>
+                            <div class="option-label" style="font-size: 1.1rem;">一键导入</div>
+                            <div class="option-desc">从我的故事库导入已有故事</div>
+                        </div>
+                        <div class="option-card import-card" onclick="showExternalImport()">
+                            <div class="option-icon" style="font-size: 3rem;">📤</div>
+                            <div class="option-label" style="font-size: 1.1rem;">外部导入</div>
+                            <div class="option-desc">上传本地txt、doc、docx文件</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 画风选择区域 -->
+                <div id="styleSelection" class="style-selection hidden">
+                    <h2 class="step-title" style="text-align: center; margin-bottom: 2.5rem; font-size: 1.8rem;">选择绘本画风</h2>
+                    <p class="step-hint" style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        每种画风都有独特的艺术魅力，选择最符合故事氛围的风格吧
+                    </p>
+                    <div class="style-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; padding: 0 1rem;">
+                        <!-- 可爱治愈Q版风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'cute')" data-style="cute">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #FFE5E5 0%, #FFC9C9 100%);">
+                                <div class="style-icon">🌸</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 20%; left: 20%; font-size: 2rem;">🐰</span>
+                                    <span style="position: absolute; top: 20%; right: 20%; font-size: 2rem;">🐱</span>
+                                    <span style="position: absolute; bottom: 20%; left: 30%; font-size: 2.5rem;">🐻</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">可爱治愈Q版风</h3>
+                                <p class="style-desc">圆润Q萌的角色，温暖柔和的色彩，适合温馨童话</p>
+                            </div>
+                        </div>
+
+                        <!-- 清新扁平风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'flat')" data-style="flat">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #E5FFE5 0%, #C9FFC9 100%);">
+                                <div class="style-icon">🌿</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">🌳</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">清新扁平风</h3>
+                                <p class="style-desc">简约几何造型，清新配色，现代感十足</p>
+                            </div>
+                        </div>
+
+                        <!-- 水彩手绘风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'watercolor')" data-style="watercolor">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #E5F3FF 0%, #C9E5FF 100%);">
+                                <div class="style-icon">🎨</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 30%; left: 25%; font-size: 2.5rem;">🦋</span>
+                                    <span style="position: absolute; bottom: 30%; right: 25%; font-size: 2.5rem;">🌸</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">水彩手绘风</h3>
+                                <p class="style-desc">柔和水彩晕染，笔触自然，艺术感强烈</p>
+                            </div>
+                        </div>
+
+                        <!-- 国风传统��风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'chinese')" data-style="chinese">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #FFF5E5 0%, #FFE5C9 100%);">
+                                <div class="style-icon">🏮</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">🐉</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">国风传统画风</h3>
+                                <p class="style-desc">水墨丹青意境，传统纹样，东方美学</p>
+                            </div>
+                        </div>
+
+                        <!-- 拼贴肌理风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'collage')" data-style="collage">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #F3E5FF 0%, #E5C9FF 100%);">
+                                <div class="style-icon">🖼️</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 20%; left: 30%; font-size: 2rem;">✂️</span>
+                                    <span style="position: absolute; bottom: 30%; right: 20%; font-size: 2.5rem;">🎨</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">拼贴肌理风</h3>
+                                <p class="style-desc">纸质拼贴质感，层次丰富，手工感强</p>
+                            </div>
+                        </div>
+
+                        <!-- 美式卡通夸张风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'cartoon')" data-style="cartoon">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #FFE5F3 0%, #FFC9E5 100%);">
+                                <div class="style-icon">🎬</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">🎭</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">美式卡通夸张风</h3>
+                                <p class="style-desc">夸张表情动作，明快色彩，幽默感十足</p>
+                            </div>
+                        </div>
+
+                        <!-- 日韩清新风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'anime')" data-style="anime">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #E5F9FF 0%, #C9F0FF 100%);">
+                                <div class="style-icon">🌸</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">🎌</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">日韩清新风</h3>
+                                <p class="style-desc">精致线条，清新色调，唯美浪漫</p>
+                            </div>
+                        </div>
+
+                        <!-- 写实细腻风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'realistic')" data-style="realistic">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #E5E5E5 0%, #C9C9C9 100%);">
+                                <div class="style-icon">📷</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">🖼️</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">写实细腻风</h3>
+                                <p class="style-desc">真实光影质感，细节刻画，画面逼真</p>
+                            </div>
+                        </div>
+
+                        <!-- 复古怀旧风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'vintage')" data-style="vintage">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #FFF0E5 0%, #FFE5D9 100%);">
+                                <div class="style-icon">📻</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">📺</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">复古怀旧风</h3>
+                                <p class="style-desc">怀旧色调，经典构图，时光沉淀的美</p>
+                            </div>
+                        </div>
+
+                        <!-- 特殊质感风 -->
+                        <div class="style-card-advanced" onclick="selectPictureBookStyle(this, 'texture')" data-style="texture">
+                            <div class="style-preview" style="background: linear-gradient(135deg, #F5E5E5 0%, #E5D9D9 100%);">
+                                <div class="style-icon">🖍️</div>
+                                <div class="style-sample-characters">
+                                    <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">🎨</span>
+                                </div>
+                            </div>
+                            <div class="style-info">
+                                <h3 class="style-name">特殊质感风</h3>
+                                <p class="style-desc">蜡笔/油画棒/彩铅，独特材质肌理</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <button class="btn btn-primary btn-large" id="generateBtn" style="display: none; font-size: 1.2rem; padding: 1.2rem 3rem; border-radius: 50px; box-shadow: 0 8px 30px rgba(74, 144, 226, 0.3);" onclick="generatePictureBook()">
+                            ✨ 开始生成绘本
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 底部栏 -->
+    <footer class="bottom-bar">
+        <a href="index.html">首页</a>
+        <span>|</span>
+        <a href="profile.html">个人中心</a>
+        <span>|</span>
+        <a href="#">隐私政策</a>
+        <span>|</span>
+        <a href="#">用户协议</a>
+        <span>|</span>
+        <a href="#">联系客服</a>
+    </footer>
+</div>
+
+<!-- 导入模态框 -->
+<div class="modal hidden" id="importModal">
+    <div class="modal-overlay" onclick="closeImportModal()"></div>
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3>选择要导入的内容</h3>
+            <button class="modal-close" onclick="closeImportModal()">×</button>
+        </div>
+        <div class="modal-body" style="padding: 0;">
+            <!-- Tab切换 -->
+            <div class="import-tabs" style="display: flex; border-bottom: 2px solid var(--border);">
+                <button class="import-tab active" id="storyTab" onclick="switchImportTab('story')" style="flex: 1; padding: 1rem; font-size: 1rem; font-weight: 600; color: var(--primary); border-bottom: 2px solid var(--primary); background: transparent; cursor: pointer;">
+                    📖 选择故事
+                </button>
+                <button class="import-tab" id="characterTab" onclick="switchImportTab('character')" style="flex: 1; padding: 1rem; font-size: 1rem; font-weight: 600; color: var(--text-secondary); border-bottom: 2px solid transparent; background: transparent; cursor: pointer;">
+                    🎭 选择角色
+                </button>
+            </div>
+
+            <!-- 故事列表容器 -->
+            <div id="storyListContainer" class="import-content">
+                <div class="story-list" id="storyList">
+                    <!-- 故事列表将通过JS加载 -->
+                </div>
+            </div>
+
+            <!-- 角色列表容器 -->
+            <div id="characterListContainer" class="import-content hidden">
+                <div class="character-list" id="characterList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding: 1.5rem;">
+                    <!-- 角色列表将通过JS加载 -->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeImportModal()">取消</button>
+            <button class="btn btn-primary" onclick="skipImport()">生成绘本</button>
+        </div>
+    </div>
+</div>
+
+<!-- 绘本展示模态框 -->
+<div class="modal hidden" id="pictureBookModal">
+    <div class="modal-overlay" onclick="closePictureBookModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="pictureBookTitle">我的绘本</h3>
+            <button class="modal-close" onclick="closePictureBookModal()">×</button>
+        </div>
+        <div class="modal-body" id="pictureBookContent">
+            <!-- 绘本内容将通过JS加载 -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closePictureBookModal()">关闭</button>
+            <button class="btn btn-primary" onclick="exportPictureBookPDF()">导出PDF</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
