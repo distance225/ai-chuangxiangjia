@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script>
+    <style>
+        .about-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-soft) 0%, var(--bg-warm) 50%, var(--mint-light) 100%);
+            padding: 2.5rem 0 5rem;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 2.25rem;
+        }
+
+        .about-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 55%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .member-row {
+            width: 80%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .member-modal {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.16);
+            padding: 1.2rem 1.1rem 1.1rem;
+            backdrop-filter: blur(8px);
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+        }
+
+        .member-modal:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(74, 144, 226, 0.22);
+        }
+
+        .member-name {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.02em;
+        }
+
+        .member-role {
+            font-size: 0.95rem;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        @media (max-width: 1100px) {
+            .member-row {
+                width: 88%;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<div class="page about-page">
+    <div class="about-header">
+        <h1 class="about-title">关于我们</h1>
+        <p class="about-subtitle">AI 创想家产品开发成员分工</p>
+    </div>
+
+    <section class="member-row">
+        <article class="member-modal">
+            <h2 class="member-name">叶文琳</h2>
+            <p class="member-role">
+                AI产品经理：统筹产品整体规划与设计工作，主导故事创作器、绘本生成器、角色工坊、热门赛事、家长验证等核心功能的需求梳理、内容搭建与流程设计；独立完成新用户注册 onboarding 全流程设计，负责项目 slogan 与首页宣传文案撰写，并持续对接研发与设计团队，跟进开发进度、推进产品上线验收。
+            </p>
+        </article>
+
+        <article class="member-modal">
+            <h2 class="member-name">高一卜</h2>
+            <p class="member-role">
+                产品策划与视觉交互：负责产品主题定位、内容体系搭建与核心模块策划，完成视觉风格定义、界面呈现设计和全流程交互优化；承担项目 PPT 制作、内容排版美化与正式汇报演示，协同完成需求文档撰写、细节检查、逻辑调优与版本迭代，保障内容与视觉表达的一致性。
+            </p>
+        </article>
+
+        <article class="member-modal">
+            <h2 class="member-name">卢帅奇</h2>
+            <p class="member-role">
+                程序开发与AI交互：承担产品前端制作、后端程序架构设计与核心功能开发，负责代码实现、AI 接口对接、功能联调和交互优化；全程参与产品完善、bug 修复与性能调优，配合完成角色工坊、热门赛事、家长验证等模块的技术落地，保障产品稳定运行与功能交付。
+            </p>
+        </article>
+    </section>
+</div>
+
+<!-- 底部栏 -->
+<footer class="bottom-bar">
+    <a href="index.html">首页</a>
+    <span>|</span>
+    <a href="profile.html">个人中心</a>
+    <span>|</span>
+    <a href="#">隐私政策</a>
+    <span>|</span>
+    <a href="#">用户协议</a>
+    <span>|</span>
+    <a href="#">联系客服</a>
+    <span>|</span>
+    <a href="about.html">关于我们</a>
+</footer>
+
+</body>
+</html>
+
