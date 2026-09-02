@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新手引导 - AI创想家</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js"></script><script>(function(){function hideLoading(){var el=document.getElementById('loadingOverlay');if(el)el.style.display='none';}if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(hideLoading,0);}else{document.addEventListener('DOMContentLoaded',hideLoading);}setTimeout(hideLoading,8000);})();</script>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast 提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== 新手引导页面 ========== -->
+<div class="page onboarding-page" id="onboardingPage">
+    <div class="onboarding-progress">
+        <div class="progress-star active" id="star1">⭐</div>
+        <div class="progress-star" id="star2">⭐</div>
+        <div class="progress-star" id="star3">⭐</div>
+        <div class="progress-star" id="star4">⭐</div>
+        <div class="progress-star" id="star5">⭐</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 17%;"></div>
+        </div>
+    </div>
+    
+    <div class="onboarding-content">
+        <div class="onboarding-card">
+            <!-- 步骤1: 欢迎与命名 -->
+            <div class="onboarding-step active" id="step1">
+                <div class="step-icon">👋</div>
+                <h2 class="step-title">欢迎来到 AI 创想家！</h2>
+                <p class="step-desc">嗨～ 我是你的创作小伙伴绘绘！快告诉我你的名字吧～</p>
+                <div class="name-input-wrapper">
+                    <input type="text" class="form-input" placeholder="输入你的名字" id="userNameInput">
+                    <button class="random-name-btn" onclick="generateRandomName()">🎲</button>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn btn-primary" onclick="completeStep1()">确定</button>
+                </div>
+            </div>
+            
+            <!-- 步骤2: 功能认知 -->
+            <div class="onboarding-step" id="step2">
+                <div class="step-icon">🎯</div>
+                <h2 class="step-title">认识创作工具</h2>
+                <p class="step-desc">看！这三个就是我们的创作魔法工具～ 点击它们就能开启不同的创作之旅哦！</p>
+                <div class="feature-preview">
+                    <div class="feature-item" onclick="selectFeature(this)">
+                        <div class="feature-item-icon">📝</div>
+                        <div class="feature-item-name">故事创作</div>
+                        <div class="feature-item-desc">AI帮你写故事</div>
+                    </div>
+                    <div class="feature-item" onclick="selectFeature(this)">
+                        <div class="feature-item-icon">📚</div>
+                        <div class="feature-item-name">绘本生成</div>
+                        <div class="feature-item-desc">图文并茂的绘本</div>
+                    </div>
+                    <div class="feature-item" onclick="selectFeature(this)">
+                        <div class="feature-item-icon">🎭</div>
+                        <div class="feature-item-name">角色工坊</div>
+                        <div class="feature-item-desc">设计你的角色</div>
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn btn-ghost" onclick="skipOnboarding()">稍后查看</button>
+                    <button class="btn btn-primary" onclick="completeStep2()">下一步</button>
+                </div>
+            </div>
+            
+            <!-- 步骤3: 主题选择 -->
+            <div class="onboarding-step" id="step3">
+                <div class="step-icon">🎨</div>
+                <h2 class="step-title">选择一个故事主题</h2>
+                <p class="step-desc">选好主题，AI就能帮你生成专属故事啦～</p>
+                <div class="theme-cards">
+                    <div class="theme-card" onclick="selectTheme(this)">
+                        <div class="theme-card-icon">💪</div>
+                        <div class="theme-card-name">成长激励</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this)">
+                        <div class="theme-card-icon">🏫</div>
+                        <div class="theme-card-name">校园生活</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this)">
+                        <div class="theme-card-icon">🚀</div>
+                        <div class="theme-card-name">科学幻想</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this)">
+                        <div class="theme-card-icon">🐾</div>
+                        <div class="theme-card-name">动物朋友</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this)">
+                        <div class="theme-card-icon">🎉</div>
+                        <div class="theme-card-name">节日庆典</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme(this)">
+                        <div class="theme-card-icon">✨</div>
+                        <div class="theme-card-name">自定义</div>
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn btn-ghost" onclick="prevStep(2)">上一步</button>
+                    <button class="btn btn-primary" onclick="completeStep3()">下一步</button>
+                </div>
+            </div>
+            
+            <!-- 步骤4: 角色设置 -->
+            <div class="onboarding-step" id="step4">
+                <div class="step-icon">👤</div>
+                <h2 class="step-title">设计你的角色</h2>
+                <p class="step-desc">现在我们来给故事主角设计形象吧！</p>
+                <div class="role-customizer">
+                    <div class="role-preview">
+                        <div class="role-preview-character" id="previewCharacter">🧒</div>
+                    </div>
+                    <div class="role-options">
+                        <div class="role-option" onclick="changeCharacter('🧒', this)">
+                            <span class="role-option-icon">🧒</span>
+                            <span class="role-option-name">男孩</span>
+                        </div>
+                        <div class="role-option" onclick="changeCharacter('👧', this)">
+                            <span class="role-option-icon">👧</span>
+                            <span class="role-option-name">女孩</span>
+                        </div>
+                        <div class="role-option" onclick="changeCharacter('🐰', this)">
+                            <span class="role-option-icon">🐰</span>
+                            <span class="role-option-name">小兔子</span>
+                        </div>
+                        <div class="role-option" onclick="changeCharacter('🐻', this)">
+                            <span class="role-option-icon">🐻</span>
+                            <span class="role-option-name">小熊</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn btn-ghost" onclick="prevStep(3)">上一步</button>
+                    <button class="btn btn-primary" onclick="completeStep4()">下一步</button>
+                </div>
+            </div>
+            
+            <!-- 步骤5: 作品生成 -->
+            <div class="onboarding-step" id="step5">
+                <div class="step-icon generating-animation">
+                    <div class="magic-wand">🪄</div>
+                </div>
+                <h2 class="step-title">生成你的故事</h2>
+                <p class="step-desc">点击「生成故事」按钮，AI会施展魔法，把你的想法变成完整故事哦！</p>
+                <div class="generate-progress" id="generateProgress" style="display: none;">
+                    <div class="generate-progress-bar">
+                        <div class="generate-progress-fill" id="generateFill"></div>
+                    </div>
+                    <p class="generate-text" id="generateText">正在魔法生成中... 10%</p>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn btn-ghost" onclick="prevStep(4)">上一步</button>
+                    <button class="btn btn-pink" onclick="generateStory()">✨ 生成故事</button>
+                </div>
+            </div>
+            
+            <!-- 步骤6: 保存完成 -->
+            <div class="onboarding-step" id="step6">
+                <div class="save-complete" style="position: relative;">
+                    <div class="confetti" id="confetti"></div>
+                    <div class="success-badge">🎉</div>
+                    <h2 class="step-title">太棒啦！</h2>
+                    <p class="step-desc">你的第一篇故事已经保存成功！快去创作中心继续创作吧～</p>
+                    <div class="onboarding-actions">
+                        <button class="btn btn-primary" onclick="finishOnboarding()">进入创作中心 🚀</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 虚拟向导绘绘 -->
+    <div class="huihui-guide">
+        <div class="huihui-bubble" id="huihuiBubble">
+            嗨～ 我是绘绘！欢迎来到AI创想家！🎨
+        </div>
+        <div class="huihui-avatar">🦌</div>
+    </div>
+</div>
+
+</body>
+</html>
